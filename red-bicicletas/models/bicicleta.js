@@ -36,10 +36,4 @@ Bicicleta.removeById = (aBiciId) => {
 
 }
 
-//Precargado de bicis
-let a = new Bicicleta(1, 'rojo', 'urbana', [4.9, -74.4])
-let b = new Bicicleta(2, 'verde', 'urbana', [4.4, -75.8])
-
-Bicicleta.add(a)
-Bicicleta.add(b)
 module.exports = Bicicleta
