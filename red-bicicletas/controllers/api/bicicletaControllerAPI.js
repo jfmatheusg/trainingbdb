@@ -3,6 +3,7 @@ let Bicicleta = require('../../models/bicicleta')
 exports.bicicleta_list = (req, res) => res.status(200).json({ bicicletas: Bicicleta.allBicis })
 
 exports.bicicleta_create = (req, res) => {
+    console.log('i got here')
     let bici =
         new Bicicleta(
             req.body.id,
