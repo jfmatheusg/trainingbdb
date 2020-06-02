@@ -1,39 +1,33 @@
-let Bicicleta = function(id, color, modelo, ubicacion) {
-    this.id = id
-    this.color = color
-    this.modelo = modelo
-    this.ubicacion = ubicacion
+let mongoose = require('mongoose')
+let Schema = mongoose.Schema
+
+let bicicletaSchema = new Schema({
+    code: Number,
+    color: String,
+    modelo: String,
+    ubicacion: {
+        type: [Number],
+        index: { type: '2dsphere', sparse: true }
+    }
+})
+
+bicicletaSchema.statics.createInstance = function(code, color, modelo, ubicacion) {
+    let newBicicle = new this();
+    newBicicle.code = code;
+    newBicicle.color = color;
+    newBicicle.modelo = modelo;
+    newBicicle.ubicacion = ubicacion;
+    return newBicicle;
 }
 
-Bicicleta.prototype.toString = () => 'id: ' + this.id + '| color: ' + this.color
+bicicletaSchema.methods.toString = () => 'code: ' + this.code + ' | color: ' + this.color
 
-//En memoria se guardan las bicis
-Bicicleta.allBicis = []
+bicicletaSchema.statics.allBicis = function(cb) { this.find({}, cb)  }
 
-//agregar Bici
-Bicicleta.add = (aBici) => Bicicleta.allBicis.push(aBici)
+bicicletaSchema.statics.add = function(aBici, cb) { this.create(aBici, cb) }
 
-//Encontrar bici por id
-Bicicleta.findById = (aBiciId) => {
-    let aBici = Bicicleta.allBicis.find(x => x.id == aBiciId)
-    if (aBici)
-        return aBici
-    else
-        throw new Error(`No existe una bicicleta con el id ${aBiciId}`)
-}
+bicicletaSchema.statics.findByCode = function(aCode, cb) { this.findOne({ code: aCode }, cb) }
 
-//Elimnar Biclas
-Bicicleta.removeById = (aBiciId) => {
+bicicletaSchema.statics.removeByCode = function(aCode, cb) { this.deleteOne({ code: aCode }, cb) }
 
-    //se asegura que el objeto exista
-    Bicicleta.findById(aBiciId)
-
-    for (let i = 0; i < Bicicleta.allBicis.length; i++)
-        if (Bicicleta.allBicis[i].id == aBiciId) {
-            Bicicleta.allBicis.splice(i, 1)
-            break
-        }
-
-}
-
-module.exports = Bicicleta
+module.exports = mongoose.model('Bicicleta', bicicletaSchema)

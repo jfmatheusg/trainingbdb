@@ -1,35 +1,48 @@
 let Bicicleta = require('../../models/bicicleta')
 
-exports.bicicleta_list = (req, res) => res.status(200).json({ bicicletas: Bicicleta.allBicis })
+exports.bicicleta_list = (req, res) => {
+    Bicicleta.allBicis((err, bicis) => {
+        res.status(200).json({ bicicletas: bicis })
+    })
+}
+
 
 exports.bicicleta_create = (req, res) => {
-    console.log('i got here')
     let bici =
-        new Bicicleta(
-            req.body.id,
-            req.body.color,
-            req.body.modelo)
+        new Bicicleta({
+            code: req.body.id,
+            color: req.body.color,
+            modelo: req.body.modelo,
+            ubicacion: [req.body.lat, req.body.lng]
+        })
 
-    bici.ubicacion = [req.body.lat, req.body.lng]
 
-    Bicicleta.add(bici)
+    Bicicleta.add(bici, (err, newBici) => {
+        res.status(200).json({ bicla: newBici })
+    })
 
-    res.status(200).json({ bicla: bici })
+
 }
 
 exports.bicicleta_delete = (req, res) => {
-    Bicicleta.removeById(req.body.id)
+    Bicicleta.removeByCode(req.body.id, (err, result) => {
+        res.status(204).send()
+    })
 
-    res.status(204).send();
+
 }
 
 exports.bicicleta_update = (req, res) => {
-    let bici = Bicicleta.findById(req.body.id)
+    Bicicleta.findByCode(req.body.id, (err, bici) => {
+        console.log(bici)
+        bici.code = req.body.id
+        bici.color = req.body.color
+        bici.modelo = req.body.modelo
+        bici.ubicacion = [req.body.lat, req.body.lng]
+        bici.save()
+        console.log(bici)
+        res.status(200).send({ bicla: bici });
+    })
 
-    bici.id = req.body.id
-    bici.color = req.body.color
-    bici.modelo = req.body.modelo
-    bici.ubicacion = [req.body.lat, req.body.lng]
 
-    res.status(200).send({ bicla: bici });
 }
