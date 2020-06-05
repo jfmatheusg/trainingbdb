@@ -41,7 +41,6 @@ module.exports = {
         }, (err, nuevoUsuario) => {
 
             if (err) {
-                console.log("esto " + err)
                 res.render('usuarios/create', { errors: err.message, usuario: new Usuario() })
             } else {
                 console.log(nuevoUsuario)
