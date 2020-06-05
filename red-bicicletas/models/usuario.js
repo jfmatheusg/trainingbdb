@@ -53,7 +53,7 @@ usuarioSchema.pre('save', function(next) {
     next();
 })
 
-usuarioSchema.methods.validPassword = (password) => {
+usuarioSchema.methods.validPassword = function(password) {
     return bcrypt.compareSync(password, this.password)
 }
 
@@ -82,6 +82,32 @@ usuarioSchema.methods.enviar_email_bienvenida = function(cb) {
 
             console.log('A verification email has been sent to ' + email_destination)
         })
+    })
+}
+
+usuarioSchema.methods.resetPassword = function(cb) {
+    console.log(this._id)
+    const token = new Token({
+        _userId: this._id,
+        token: crypto.randomBytes(16).toString('hex')
+    })
+    const email_destination = this.email
+    token.save((err) => {
+        if (err) return console.log(err.message)
+
+        const mailOptions = {
+            from: 'no-reply@redbicicletas.com',
+            to: email_destination,
+            subject: 'Reseteo de password de cuenta',
+            text: 'Holi. Haga click en este link para resetear el password: \n' + 'http://localhost:3000' + '\/resetPassword\/' + token.token + '.\n'
+        }
+
+        mailer.sendMail(mailOptions, (err) => {
+            if (err) return console.log(err.message)
+
+            console.log('A reset password email has been sent to ' + email_destination)
+        })
+        cb(null)
     })
 }
 

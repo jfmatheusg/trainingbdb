@@ -3,6 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const Usuario = require('./models/usuario')
+const Token = require('./models/token')
 const passport = require('./config/passport')
 const session = require('express-session')
 
@@ -44,17 +46,23 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-
 app.get('/login', (req, res) => {
     res.render('session/login')
 })
 
 app.post('/login', (req, res, next) => {
-    //passport
+    passport.authenticate('local', (err, usuario, info) => {
+        if (err) return next(err)
+        if (!usuario) return res.render('session/login', { info })
+        req.logIn(usuario, (err) => {
+            if (err) return next(err)
+            return res.redirect('/')
+        })
+    })(req, res, next)
 })
 
 app.get('/logout', (req, res) => {
+    req.logOut()
     res.redirect('/')
 })
 
@@ -63,8 +71,51 @@ app.get('/forgotPassword', (req, res) => {
 })
 
 app.post('/forgotPassword', (req, res) => {
+    Usuario.findOne({ email: req.body.email }, (err, usuario) => {
+        if (!usuario) return res.render('session/forgotPassword', { info: { message: 'No existe un usuario asociado a ese email' } })
 
+        usuario.resetPassword((err) => {
+            if (err) return next(err)
+            console.log('session/forgotPasswordMessage')
+        })
 
+        res.render('session/forgotPasswordMessage')
+    })
+})
+
+app.get('/resetPassword/:token', (req, res, next) => {
+    Token.findOne({ token: req.params.token }, (err, token) => {
+        if (!token) return res.status(400).send({ type: 'not-verified', msg: 'No existe un usuario asociado al token. Verifique que este token no haya expirado' })
+
+        Usuario.findById(token._userId, (err, usuario) => {
+            if (!usuario) return res.status(400).send({ msg: 'No existe usuario asociado al token' })
+            res.render('session/resetPassword', { errors: {}, usuario: usuario })
+        })
+    })
+})
+
+app.post('/resetPassword', (req, res) => {
+    if (req.body.password != req.body.confirm_password) {
+        res.render(
+            'session/resetPassword', {
+                errors: {
+                    confirm_password: { message: 'No coinciden los passwords ingresados' }
+                },
+                usuario: new Usuario({ email: req.body.email })
+            }
+        )
+        return
+    }
+    Usuario.findOne({ email: req.body.email }, (err, usuario) => {
+        usuario.password = req.body.password
+        usuario.save((err) => {
+            if (err) {
+                res.render('session/resetPassword', { errors: err, errors, usuario: new Usuario({ email: req.body.email }) })
+            } else {
+                res.redirect('/')
+            }
+        })
+    })
 })
 
 app.use('/bicicletas', bicicletasRouter)
@@ -72,6 +123,7 @@ app.use('/usuarios', usuariosRouter)
 app.use('/token', tokenRouter)
 app.use('/api/bicicletas', bicicletasAPIRouter)
 app.use('/api/usuarios', usuariosAPIRouter)
+app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

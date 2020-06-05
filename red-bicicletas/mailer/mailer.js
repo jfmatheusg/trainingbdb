@@ -1,4 +1,3 @@
-// Use at least Nodemailer v4.1.0
 const nodemailer = require('nodemailer');
 
 module.exports = nodemailer.createTransport({
