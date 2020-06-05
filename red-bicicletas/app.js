@@ -3,6 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const passport = require('./config/passport')
+const session = require('express-session')
 
 var indexRouter = require('./routes/index');
 var usuariosRouter = require('./routes/usuarios');
@@ -11,7 +13,16 @@ var bicicletasRouter = require('./routes/bicicletas');
 var bicicletasAPIRouter = require('./routes/api/bicicletas')
 var usuariosAPIRouter = require('./routes/api/usuarios')
 
+const store = new session.MemoryStore
+
 var app = express();
+app.use(session({
+    cookie: { maxAge: 240 * 60 * 60 * 1000 },
+    store: store,
+    saveUninitialized: true,
+    resave: 'true',
+    secret: 'red_bicis_math_mateo'
+}))
 
 var mongoose = require('mongoose')
 
@@ -29,9 +40,33 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(passport.initialize())
+app.use(passport.session())
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+
+app.get('/login', (req, res) => {
+    res.render('session/login')
+})
+
+app.post('/login', (req, res, next) => {
+    //passport
+})
+
+app.get('/logout', (req, res) => {
+    res.redirect('/')
+})
+
+app.get('/forgotPassword', (req, res) => {
+    res.render('session/forgotPassword')
+})
+
+app.post('/forgotPassword', (req, res) => {
+
+
+})
+
 app.use('/bicicletas', bicicletasRouter)
 app.use('/usuarios', usuariosRouter)
 app.use('/token', tokenRouter)
