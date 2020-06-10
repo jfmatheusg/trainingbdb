@@ -34,7 +34,8 @@ app.use(session({
 
 var mongoose = require('mongoose')
 
-var mongoDB = 'mongodb://localhost/red_bicicletas'
+//var mongoDB = 'mongodb://localhost/red_bicicletas'
+var mongoDB = 'mongodb+srv://admin:Abcd123abcd@red-bicicletas-qbwjx.mongodb.net/test'
 mongoose.connect(mongoDB, { useNewUrlParser: true })
 mongoose.Promise = global.Promise
 const db = mongoose.connection
