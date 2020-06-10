@@ -78,7 +78,7 @@ usuarioSchema.methods.enviar_email_bienvenida = function(cb) {
         }
 
         mailer.sendMail(mailOptions, (err) => {
-            if (err) return console.log(err.message)
+            if (err) return console.log('mailer error: ' + err.message)
 
             console.log('A verification email has been sent to ' + email_destination)
         })

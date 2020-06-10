@@ -13,6 +13,7 @@ module.exports = {
     },
     update: (req, res, next) => {
         let update_values = { nombre: req.body.nombre }
+        console.log(params.id)
         Usuario.findByIdAndUpdate(req.params.id, update_values, (err, usuario) => {
             if (err) {
                 console.log(err)
