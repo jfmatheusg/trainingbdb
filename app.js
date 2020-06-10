@@ -135,6 +135,11 @@ app.use('/api/auth', authAPIRouter)
 app.use('/privacy_policy', (req, res) => {
     res.sendFile(__dirname + '/public/privacy_policy.html')
 })
+
+app.use('/google6ce09d4d4b958d94', (req, res) => {
+    res.sendFile(__dirname + '/public/google6ce09d4d4b958d94.html')
+})
+
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
