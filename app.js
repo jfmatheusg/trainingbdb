@@ -131,6 +131,10 @@ app.use('/token', tokenRouter)
 app.use('/api/bicicletas', validarUsuario, bicicletasAPIRouter)
 app.use('/api/usuarios', usuariosAPIRouter)
 app.use('/api/auth', authAPIRouter)
+
+app.use('/privacy_policy', (req, res) => {
+    res.sendFile(__dirname + '/public/privacy_policy.html')
+})
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler

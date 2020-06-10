@@ -31,5 +31,4 @@ if (process.env.NODE_ENV === 'production') {
     }
 }
 
-console.log(mailConfig)
 module.exports = nodemailer.createTransport(mailConfig);
