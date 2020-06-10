@@ -9,8 +9,9 @@ exports.usuarios_list = (req, res) => {
 }
 
 exports.usarios_create = (req, res) => {
-    var usuario = new Usuario({ nombre: req.body.nombre })
+    var usuario = new Usuario({ nombre: req.body.nombre, email: req.body.email, password: req.body.password })
     usuario.save((err) => {
+        if (err) return res.status(500).json(err)
         res.status(200).json(usuario)
     })
 }
