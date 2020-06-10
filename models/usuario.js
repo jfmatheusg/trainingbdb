@@ -71,7 +71,7 @@ usuarioSchema.methods.enviar_email_bienvenida = function(cb) {
         if (err) return console.log(err.message)
 
         const mailOptions = {
-            from: 'no-reply@redbicicletas.com',
+            from: 'jfmatheusg@gmail.com',
             to: email_destination,
             subject: 'Verificación de cuenta',
             text: 'Holi. Haga click en este link: \n' + 'http://localhost:3000' + '\/token/confirmation\/' + token.token + '.\n'
@@ -96,7 +96,7 @@ usuarioSchema.methods.resetPassword = function(cb) {
         if (err) return console.log(err.message)
 
         const mailOptions = {
-            from: 'no-reply@redbicicletas.com',
+            from: 'jfmatheusg@gmail.com',
             to: email_destination,
             subject: 'Reseteo de password de cuenta',
             text: 'Holi. Haga click en este link para resetear el password: \n' + 'http://localhost:3000' + '\/resetPassword\/' + token.token + '.\n'
