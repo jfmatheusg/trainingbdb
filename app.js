@@ -21,7 +21,7 @@ var usuariosAPIRouter = require('./routes/api/usuarios')
 var authAPIRouter = require('./routes/api/auth')
 
 let store
-if (process.env.NODE_ENV = 'development') store = new session.MemoryStore
+if (process.env.NODE_ENV === 'development') store = new session.MemoryStore
 else {
     console.log('store de sesion en producción')
     store = new MongoDBStore({
