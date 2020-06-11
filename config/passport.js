@@ -18,8 +18,8 @@ passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: process.env.HOST + '/auth/google/callback'
-}, function(accessToken, refreshToken, profile, email, cb) {
-    Usuario.findOneOrCreatebyGoogle(profile, email, (err, user) => {
+}, function(accessToken, refreshToken, profile, cb) {
+    Usuario.findOneOrCreatebyGoogle(profile, (err, user) => {
         return cb(err, user)
     })
 }))
