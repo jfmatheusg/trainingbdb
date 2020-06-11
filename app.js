@@ -154,8 +154,8 @@ app.use('/google6ce09d4d4b958d94', (req, res) => {
 
 app.get('/auth/google',
     passport.authenticate('google', {
-        scope: ['https://www.googleapis.com/auth/plus.login',
-            'https://www.googleapis.com/auth/plus.profile.emails.read'
+        scope: ['profile',
+            'email'
         ]
     }));
 
