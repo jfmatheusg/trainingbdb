@@ -13,7 +13,7 @@ body#LoginForm
     .login-form
       .main-div
         .panel
-          if info && info.message 
+          if info && info.message
             div.alert.alert-danger
               = info.message
           h2 Admin Login
@@ -26,5 +26,5 @@ body#LoginForm
           .forgot
             a(href='/forgotPassword') Olvidé mi password
 
-
+          a(href='/auth/google') Login con Google
           button.btn.btn-primary(type='submit') Login
