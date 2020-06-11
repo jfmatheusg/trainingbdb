@@ -127,7 +127,7 @@ usuarioSchema.statics.findOneOrCreatebyGoogle = function findOneOrCreate(conditi
             values.email = condition.emails[0].value
             values.nombre = condition.displayName || 'NO NAME'
             values.verificado = true
-            values.password = condition._json.sub + "math"
+            values.password = crypto.randomBytes(16).toString('hex')
             console.log('-------------- VALUES --------------')
             console.log(values)
             self.create(values, (err, result) => {
@@ -152,7 +152,7 @@ usuarioSchema.statics.findOneOrCreatebyFacebook = function findOneOrCreate(condi
             values.email = condition.emails[0].value
             values.nombre = condition.displayName || 'NO NAME'
             values.verificado = true
-            values.password = condition._json.etag + "math"
+            values.password = crypto.randomBytes(16).toString('hex')
             console.log('-------------- VALUES --------------')
             console.log(values)
             self.create(values, (err, result) => {
